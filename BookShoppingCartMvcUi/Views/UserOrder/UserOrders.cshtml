@@ -1,0 +1,86 @@
+﻿@model IEnumerable<Order>
+@{
+
+}
+
+<div style="width:100%;">
+    <a class="btn btn-secondary my-2" href="/Home/Index">Back</a>
+    <h2 style="text-align:center;">My Orders</h2>
+    @if (Model != null && Model.Count() > 0)
+    {
+        <div>
+            <table class="table table-striped">
+                <tr>
+                    <th>Order Date</th>
+                    <th>Order Status</th>
+                    <th>Order Price</th>
+                    <th>Action</th>
+                </tr>
+                @foreach (var order in Model)
+                {
+                    <tr>
+                        <td>@order.CreateDate.ToString("dd-MM-yyyy")</td>
+                        <td>@order.OrderStatus.StatusName</td>
+                        <td>
+                            @(order.OrderDetail.Select(item => item.Book.Price * item.Quantity).Sum())
+                        </td>
+                        <td>
+                            <a href="javascript:void(0);" onclick="toggleDetails('details-@order.Id')">Show</a>
+                        </td>
+                    </tr>
+                    <tr id="details-@order.Id" style="display:none;">
+                        <td colspan="4">
+                            <table class="table table-striped">
+                                <tr>
+                                    <th>Book</th>
+                                    <th>Image</th>
+                                    <th>Genre</th>
+                                    <th>Unit Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total Price</th>
+                                </tr>
+                                @foreach (var item in order.OrderDetail)
+                                {
+                                    <tr>
+                                        <td>@item.Book.BookName</td>
+                                        <td>
+                                            @if (string.IsNullOrEmpty(item.Book.Image))
+                                            {
+                                                <img src="/images/noimage.jpg" style="width:80px;height:100px" />
+                                            }
+                                            else
+                                            {
+                                                <img src="/images/@item.Book.Image" style="width:80px;height:100px" />
+                                            }
+                                        </td>
+                                        <td>@item.Book.Genre.GenreName</td>
+                                        <td>@item.Book.Price</td>
+                                        <td>@item.Quantity</td>
+                                        <td>@(item.Book.Price * item.Quantity)</td>
+                                    </tr>
+                                }
+                            </table>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="mt-5">
+            <h5 style="text-align:center;">No Order History</h5>
+        </div>
+    }
+</div>
+
+<script>
+    function toggleDetails(elementId) {
+        var detailsRow = document.getElementById(elementId);
+        if (detailsRow.style.display === "none") {
+            detailsRow.style.display = "table-row";
+        } else {
+            detailsRow.style.display = "none";
+        }
+    }
+</script>
