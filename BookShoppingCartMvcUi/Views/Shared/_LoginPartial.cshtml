@@ -1,38 +1,56 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@{
+    var userName = HttpContextAccessor.HttpContext.Session.GetString("UserName");
+    var userImagePath = HttpContextAccessor.HttpContext.Session.GetString("UserImagePath");
+    var UserId = HttpContextAccessor.HttpContext.Session.GetInt32("UserId");
+}
 
 <ul class="navbar-nav">
-    <li class="nav-item">
+    @* <li class="nav-item">
         <a class="nav-link " href="/Cart/GetUserCart">
             <span id="cartCount" class="badge text-bg-info">0</span>
             <i class="bi bi-cart"></i>
         </a>
-    </li>
+    </li> *@
 
-@if (SignInManager.IsSignedIn(User))
+@if (userName != null)
 {
+        @if (userImagePath != null)
+        {
     <li class="nav-item">
-            <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello <span id="username">@User.Identity?.Name!</span></a>
-        @if(User.IsInRole("Admin"))
+                <img src="/images/@userImagePath" 
+                     alt="Profile Picture"
+                     class="rounded-circle"
+                     style="width: 30px; height: 30px; object-fit: cover; margin-right: 8px;" />
+    </li>
+        }
+        <li class="nav-item">
+            <a class="nav-link" href="/Users/Edit/@UserId" title="Manage">Hello <span id="username">@(string.IsNullOrEmpty(userName) ? "Guest" : userName)!</span></a>
+       @*  @if(User.IsInRole("Admin"))
             {
                 <span>(Admin)</span>
-            }
+            } *@
         </li>
     <li class="nav-item">
-        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-        </form>
+            <form asp-action="Logout" asp-controller="Users" method="post">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-danger">Logout</button>
+            </form>
+
     </li>
 }
 else
 {
     
     <li class="nav-item">
-        <a class="nav-link " asp-area="Identity" asp-page="/Account/Register">Register</a>
+            <a class="nav-link " href="/Users/Create">Register</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link " asp-area="Identity" asp-page="/Account/Login">Login</a>
+            <a class="nav-link " href="/Users/Login">Login</a>
     </li>
 }
 </ul>

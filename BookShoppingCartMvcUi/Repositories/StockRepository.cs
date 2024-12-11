@@ -10,7 +10,7 @@ namespace BookShoppingCartMvcUi.Repositories
         {
             _context = context;
         }
-        public async Task<Stock?> GetStockByBookId(int bookId) => await _context.Stocks.FirstOrDefaultAsync(s => s.BookId == bookId);
+        public async Task<Stock?> GetStockByBookId(int bookId) => await _context.Stocks.Include(s => s.Book).FirstOrDefaultAsync(s => s.BookId == bookId);
 
         public async Task ManageStock(StockDTO stockToManage)
         {

@@ -18,20 +18,20 @@ namespace BookShoppingCartMvcUi.Repositories
         }
         public async Task<int> AddItem(int bookId, int qty)
         {
-            string userId = GetUserId();
+            int? userId = GetUserId();
             using var transaction = _db.Database.BeginTransaction();
             try
             {
-                if (string.IsNullOrEmpty(userId))
+                if (userId == null)
                 {
                     throw new UnauthorizedAccessException("User is not Logged-In");
                 }
-                var cart = await GetCart(userId);
+                var cart = await GetCart((int)userId);
                 if (cart == null)
                 {
                     cart = new ShoppingCart
                     {
-                        UserId = userId
+                        UserId = (int)userId
                     };
                     _db.shoppingCarts.Add(cart);
                 }
@@ -59,7 +59,7 @@ namespace BookShoppingCartMvcUi.Repositories
             }
             catch (Exception ex) {
             }
-            var cartItemCount = await GetCartItemCount(userId);
+            var cartItemCount = await GetCartItemCount((int)userId);
             return cartItemCount;
         }
 
@@ -67,13 +67,13 @@ namespace BookShoppingCartMvcUi.Repositories
         public async Task<int> RemoveItem(int bookId)
         {
             //using var transaction = _db.Database.BeginTransaction();
-            string userId = GetUserId();
+            int? userId = GetUserId();
             try
             {
-                if (string.IsNullOrEmpty(userId))
+                if (userId == null)
                     throw new UnauthorizedAccessException("User is not Logged-In");
                 
-                var cart = await GetCart(userId);
+                var cart = await GetCart((int)userId);
                 if (cart == null)
                    throw new InvalidOperationException("Invalid Cart");
                 
@@ -91,7 +91,7 @@ namespace BookShoppingCartMvcUi.Repositories
             catch (Exception ex)
             {
             }
-            var cartItemCount = await GetCartItemCount(userId);
+            var cartItemCount = await GetCartItemCount((int)userId);
             return cartItemCount;
         }
 
@@ -112,17 +112,17 @@ namespace BookShoppingCartMvcUi.Repositories
 
         }
 
-        public async Task<ShoppingCart> GetCart(string userId)
+        public async Task<ShoppingCart> GetCart(int userId)
         {
             var cart = await _db.shoppingCarts.FirstOrDefaultAsync(x => x.UserId == userId);
             return cart;
         }
 
-        public async Task<int> GetCartItemCount(string userId="")
+        public async Task<int> GetCartItemCount(int userId=0)
         {
-            if(string.IsNullOrEmpty(userId))
+            if(userId==null)
             {
-                userId = GetUserId();
+                userId = (int) GetUserId();
             }
             var data = await (from cart in _db.shoppingCarts
                               join cartDetail in _db.cartDetails
@@ -142,11 +142,11 @@ namespace BookShoppingCartMvcUi.Repositories
                 //entry->Order, order details
                 //remove data->cart details
                 var userId = GetUserId();
-                if (string.IsNullOrEmpty(userId))
+                if (userId == null)
                 {
                     throw new UnauthorizedAccessException("User is not Logged-in");
                 }
-                var cart = await GetCart(userId);
+                var cart = await GetCart((int)userId);
                 if (cart is null)
                     throw new InvalidOperationException("Invalid Cart");
                 var cartDetail = _db.cartDetails
@@ -158,7 +158,7 @@ namespace BookShoppingCartMvcUi.Repositories
                     throw new InvalidOperationException("Order Status does not have Pending status");
                 var order = new Order
                 {
-                    UserId = userId,
+                    UserId = (int)userId,
                     CreateDate = DateTime.UtcNow,
                     Name = model.Name,
                     Email= model.Email,
@@ -218,10 +218,13 @@ namespace BookShoppingCartMvcUi.Repositories
             }
         }
 
-        private string GetUserId()
+        private int? GetUserId()
         {
-            var principal = _httpContextAccessor.HttpContext.User;
-            string userId = _userManager.GetUserId(principal);
+            //var principal = _httpContextAccessor.HttpContext.User;
+            //string userId = _userManager.GetUserId(principal);
+            //return userId;
+
+            var userId = _httpContextAccessor.HttpContext.Session.GetInt32("UserId");
             return userId;
         }
     }

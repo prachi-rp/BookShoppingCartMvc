@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Order>
+﻿@model IEnumerable<OrderDto>
 @{
 
 }
@@ -20,9 +20,9 @@
                 {
                     <tr>
                         <td>@order.CreateDate.ToString("dd-MM-yyyy")</td>
-                        <td>@order.OrderStatus.StatusName</td>
+                        <td>@order.OrderStatus</td>
                         <td>
-                            @(order.OrderDetail.Select(item => item.Book.Price * item.Quantity).Sum())
+                            @(order.OrderDetails.Select(item => item.UnitPrice * item.Quantity).Sum())
                         </td>
                         <td>
                             <a href="javascript:void(0);" onclick="toggleDetails('details-@order.Id')">Show</a>
@@ -34,29 +34,27 @@
                                 <tr>
                                     <th>Book</th>
                                     <th>Image</th>
-                                    <th>Genre</th>
                                     <th>Unit Price</th>
                                     <th>Quantity</th>
                                     <th>Total Price</th>
                                 </tr>
-                                @foreach (var item in order.OrderDetail)
+                                @foreach (var item in order.OrderDetails)
                                 {
                                     <tr>
-                                        <td>@item.Book.BookName</td>
-                                        <td>
-                                            @if (string.IsNullOrEmpty(item.Book.Image))
-                                            {
-                                                <img src="/images/noimage.jpg" style="width:80px;height:100px" />
-                                            }
-                                            else
-                                            {
-                                                <img src="/images/@item.Book.Image" style="width:80px;height:100px" />
-                                            }
-                                        </td>
-                                        <td>@item.Book.Genre.GenreName</td>
-                                        <td>@item.Book.Price</td>
+                                        <td>@item.BookName</td>
+                                         <td>
+                                             @if (string.IsNullOrEmpty(item.Image))
+                                             {
+                                                 <img src="/images/noimage.jpg" style="width:80px;height:100px" />
+                                             }
+                                             else
+                                             {
+                                                 <img src="/images/@item.Image" style="width:80px;height:100px" />
+                                             }
+                                         </td>
+                                        <td>@item.UnitPrice</td>
                                         <td>@item.Quantity</td>
-                                        <td>@(item.Book.Price * item.Quantity)</td>
+                                        <td>@(item.UnitPrice * item.Quantity)</td>
                                     </tr>
                                 }
                             </table>

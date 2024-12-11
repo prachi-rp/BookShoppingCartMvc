@@ -1,0 +1,19 @@
+﻿@model GenreDTO
+
+@{
+    Layout = "_AdminLayout";
+}
+<div style="width:50%">
+<h1>Add Genre</h1>
+    <a asp-action="Index" asp-controller="Genre" class="btn btn-primary">Back</a>
+<form asp-action="AddGenre">
+    <div class="my-2">
+        <label>Genre</label>
+        <input type="text" asp-for="GenreName" class="form-control" />
+            <span asp-validation-for="GenreName" class="text-danger"></span>
+    </div>
+    <div class="my-2">
+         <input type="submit" value="Add" class="btn btn-info" />
+    </div>
+</form>
+</div>

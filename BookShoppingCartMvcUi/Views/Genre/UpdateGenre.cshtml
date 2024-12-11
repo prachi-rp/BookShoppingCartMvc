@@ -1,0 +1,24 @@
+﻿@model BookShoppingCartMvcUi.Models.DTOs.GenreDTO
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<h2>Update Genre</h2>
+
+<div style="width:50%">
+<h1>Add Genre</h1>
+<a asp-action="Index" asp-controller="Genre" class="btn btn-primary">Back</a>
+<form asp-action="UpdateGenre">
+    <input type="hidden" asp-for="Id" />
+     
+    <div class="my-2">
+        <label>Genre</label>
+        <input type="text" asp-for="GenreName" class="form-control" />
+            <span asp-validation-for="GenreName" class="text-danger"></span>
+    </div>
+    <div class="my-2">
+        <input type="submit" value="Update" class="btn btn-info" />
+    </div>
+</form>
+</div>

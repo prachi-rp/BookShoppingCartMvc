@@ -1,6 +1,8 @@
 ﻿@model BookDisplay
-@{
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
+@{
+    var userName = HttpContextAccessor.HttpContext.Session.GetString("UserName");
 }
 
 <div class="my-3">
@@ -85,7 +87,7 @@
         async function add(bookId) {
             var usernameEl = document.getElementById("username");
             if (usernameEl == null) {
-                window.location.href = "/Identity/Account/Login";
+                window.location.href = "/Users/Login/";
                 //var username=usernameEl.innerText;
                 //  if(username.length<1){
                 //      window.location.href="/Identity/Account/Login";

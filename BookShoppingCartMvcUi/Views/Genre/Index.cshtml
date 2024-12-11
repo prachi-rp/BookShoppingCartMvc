@@ -1,0 +1,28 @@
+﻿@model IEnumerable<BookShoppingCartMvcUi.Models.Genre>
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<h2>Genres</h2>
+
+<p>
+    <a asp-action="AddGenre" asp-controller="Genre" class="btn btn-primary">Add New</a>
+</p>
+<table class="table">
+    <tr>
+        <th>Genre</th>
+        <th>Action</th>
+    </tr>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>@item.GenreName</td>
+            <td>
+                <a asp-action="UpdateGenre" asp-controller="Genre" class="btn btn-primary" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="DeleteGenre" asp-controller="Genre" class="btn btn-primary" asp-route-id="@item.Id" onclick="return window.confirm('Are you sure?')">Delete</a> |
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

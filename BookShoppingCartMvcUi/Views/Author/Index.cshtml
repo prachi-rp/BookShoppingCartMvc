@@ -1,0 +1,35 @@
+﻿@model IEnumerable<BookShoppingCartMvcUi.Models.Author>
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<h2>Authors</h2>
+
+<p>
+    <a asp-action="AddAuthor" asp-controller="Author" class="btn btn-primary">Add New</a>
+</p>
+<table class="table">
+    <tr>
+        <th>AuthorName</th>
+        <th>Phone</th>
+        <th>Email</th>
+        <th>Gender</th>
+        <th>Action</th>
+    </tr>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.AuthorName</td>
+                <td>@item.Phone</td>
+                <td>@item.Email</td>
+                <td>@item.Gender</td>
+                <td>
+                    <a asp-action="UpdateAuthor" asp-controller="Author" class="btn btn-primary" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="DeleteAuthor" asp-controller="Author" class="btn btn-primary" asp-route-id="@item.Id" onclick="return window.confirm('Are you sure?')">Delete</a> |
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

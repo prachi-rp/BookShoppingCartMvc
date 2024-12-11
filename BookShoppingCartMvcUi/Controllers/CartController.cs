@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookShoppingCartMvcUi.Controllers
 {
-    [Authorize]
     public class CartController : Controller
     {
         private readonly ICartRepository _cartRepo;
